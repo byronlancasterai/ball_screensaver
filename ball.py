@@ -41,18 +41,18 @@ def main():
         anchor_x="right", anchor_y="top",
     )
     ball = Ball(WINDOW / 2, WINDOW / 2, BALL_SPEED, BALL_SPEED * 0.7, BALL_R)
-    ball_label = pyglet.text.Label(
-        "\u25CF", font_size=40, color=(77, 179, 255, 255),
-        x=WINDOW / 2, y=WINDOW / 2,
+    batch = pyglet.graphics.Batch()
+    ball_shape = pyglet.shapes.Circle(
+        ball.x, ball.y, BALL_R, color=(77, 179, 255), batch=batch
     )
 
     @window.event
     def on_draw():
         window.clear()
         label.draw()
-        ball_label.x = ball.x
-        ball_label.y = ball.y
-        ball_label.draw()
+        ball_shape.x = ball.x
+        ball_shape.y = ball.y
+        batch.draw()
 
     def update(dt):
         ball.update(dt)
