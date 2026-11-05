@@ -5,6 +5,7 @@ import pyglet
 WINDOW = 640
 BALL_R = 12
 BALL_SPEED = 220.0
+GRAVITY = 300.0
 
 
 class Ball:
@@ -16,22 +17,30 @@ class Ball:
         self.radius = radius
 
     def update(self, dt):
+        self.vy -= GRAVITY * dt
         self.x += self.vx * dt
         self.y += self.vy * dt
 
+        # apply drag to horizontal velocity every frame
+        self.vx *= 0.995
+
         if self.x - self.radius < 0:
             self.x = self.radius
-            self.vx = -self.vx
+            self.vx = -self.vx * 0.9
         elif self.x + self.radius > WINDOW:
             self.x = WINDOW - self.radius
-            self.vx = -self.vx
+            self.vx = -self.vx * 0.9
 
         if self.y - self.radius < 0:
             self.y = self.radius
-            self.vy = -self.vy
+            self.vy = -self.vy * 0.8
         elif self.y + self.radius > WINDOW:
             self.y = WINDOW - self.radius
-            self.vy = -self.vy
+            self.vy = -self.vy * 0.8
+
+            if abs(self.vy) < 5.0:
+                self.vy = 0.0
+                self.vx *= 0.99
 
 
 def main():
