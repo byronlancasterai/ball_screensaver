@@ -9,6 +9,11 @@ A ball bouncing inside a rectangle under gravity, with restitution and air drag.
 - Air drag: velocity multiplied by 0.995 each frame
 - The ball loses energy until it rests on the bottom
 
+## Behavior
+
+- The ball settles in about 12 seconds.
+- Once settled (velocity near zero), the window closes automatically after 5 seconds of stillness.
+
 ## Running
 
 ```bash

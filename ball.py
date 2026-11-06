@@ -42,6 +42,14 @@ class Ball:
                 self.vy = 0.0
                 self.vx *= 0.99
 
+    @property
+    def is_settled(self):
+        return abs(self.vy) < 0.1 and abs(self.vx) < 0.1
+
+    @is_settled.setter
+    def is_settled(self, value):
+        pass
+
 
 def main():
     window = pyglet.window.Window(WINDOW, WINDOW, caption="ball")
@@ -63,8 +71,16 @@ def main():
         ball_shape.y = ball.y
         batch.draw()
 
+    settled_time = 0.0
+
     def update(dt):
         ball.update(dt)
+        if ball.is_settled:
+            settled_time += dt
+            if settled_time > 5.0:
+                pyglet.app.exit()
+        else:
+            settled_time = 0.0
 
     pyglet.clock.schedule_interval(update, 1 / 60)
     pyglet.app.run()

@@ -1,11 +1,14 @@
 """Multiple balls bouncing inside a rectangle. A screensaver."""
 import random
+import math
 import pyglet
 
 WINDOW = 640
 BALL_R = 12
 BALL_SPEED = 220.0
 NUM_BALLS = 8
+GRAVITY = 9.8
+DRAG = 0.99
 
 COLORS = [
     (255, 80, 80, 255),
