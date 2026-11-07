@@ -77,8 +77,13 @@ def main():
         ball.update(dt)
         if ball.is_settled:
             settled_time += dt
-            if settled_time > 5.0:
-                pyglet.app.exit()
+            if settled_time > 2.0:
+                # Respawn
+                ball.x = random.uniform(BALL_R, WINDOW - BALL_R)
+                ball.y = WINDOW / 2
+                ball.vx = random.uniform(-BALL_SPEED, BALL_SPEED)
+                ball.vy = random.uniform(0, BALL_SPEED)
+                settled_time = 0.0
         else:
             settled_time = 0.0
 
