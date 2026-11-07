@@ -32,6 +32,10 @@ class Ball:
         self.color = color
 
     def update(self, dt):
+        self.vy -= GRAVITY * dt
+        self.vx *= DRAG
+        self.vy *= DRAG
+
         self.x += self.vx * dt
         self.y += self.vy * dt
 
@@ -48,6 +52,43 @@ class Ball:
         elif self.y + self.radius > WINDOW:
             self.y = WINDOW - self.radius
             self.vy = -self.vy
+
+    def collide(self, other):
+        dx = other.x - self.x
+        dy = other.y - self.y
+        dist_sq = dx * dx + dy * dy
+        min_dist = self.radius + other.radius
+
+        if dist_sq < min_dist * min_dist:
+            dist = math.sqrt(dist_sq)
+            if dist == 0:
+                return
+            
+            nx = dx / dist
+            ny = dy / dist
+
+            # Position correction
+            overlap = min_dist - dist
+            self.x -= overlap * 0.5 * nx
+            self.y -= overlap * 0.5 * ny
+            other.x += overlap * 0.5 * nx
+            other.y += overlap * 0.5 * ny
+
+            # Velocity correction
+            rel_vx = other.vx - self.vx
+            rel_vy = other.vy - self.vy
+            vel_along_normal = rel_vx * nx + rel_vy * ny
+
+            if vel_along_normal > 0:
+                return
+
+            restitution = 0.99
+            impulse = -(1 + restitution) * vel_along_normal / 2.0
+
+            self.vx -= impulse * nx
+            self.vy -= impulse * ny
+            other.vx += impulse * nx
+            other.vy += impulse * ny
 
 
 def random_ball():
@@ -86,6 +127,9 @@ def main():
     def update(dt):
         for ball in balls:
             ball.update(dt)
+        for i in range(len(balls)):
+            for j in range(i + 1, len(balls)):
+                balls[i].collide(balls[j])
 
     pyglet.clock.schedule_interval(update, 1 / 60)
     pyglet.app.run()
